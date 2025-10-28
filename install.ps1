@@ -18,20 +18,15 @@ function Add-ToUserPath {
     )
 
     # Get the current user PATH
-    $currentUserPath = [Environment]::GetEnvironmentVariable("Path", "User")
 
-    # Append the folder to the PATH
-    $newUserPath = "$currentUserPath;$FolderPath"
+    $userPath = [System.Environment]::GetEnvironmentVariable("PATH","USER")
 
-    # Set the new PATH permanently for the current user
-    [Environment]::SetEnvironmentVariable("Path", $newUserPath, "User")
-
-    Write-Output "Added '$FolderPath' to user PATH."
-    # # Check if the folder is already in PATH
-    # if (-not $currentUserPath.Split(';') -contains $FolderPath) {
-    # } else {
-    #     Write-Output "'$FolderPath' is already in PATH."
-    # }
+    if ($userPath -notlike "*$FolderPath*") {
+        [System.Environment]::SetEnvironmentVariable("PATH", "$userPath;$FolderPath", "USER")
+        Write-Output "Added '$FolderPath' to user PATH."
+    } else {
+        Write-Output "'$FolderPath' is already in PATH."
+    }
 }
 
 
@@ -44,7 +39,7 @@ function Install-IfMissing {
     if (-not (Get-Command $Command -ErrorAction SilentlyContinue)) {
         Write-Host "[ERROR] $Command not found. Installing..."
         & $InstallAction
-        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
     } else {
         Write-Host "[SUCCESS] $Command already installed."
     }
