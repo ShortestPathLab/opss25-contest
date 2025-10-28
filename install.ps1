@@ -20,18 +20,18 @@ function Add-ToUserPath {
     # Get the current user PATH
     $currentUserPath = [Environment]::GetEnvironmentVariable("Path", "User")
 
-    # Check if the folder is already in PATH
-    if (-not $currentUserPath.Split(';') -contains $FolderPath) {
-        # Append the folder to the PATH
-        $newUserPath = "$currentUserPath;$FolderPath"
+    # Append the folder to the PATH
+    $newUserPath = "$currentUserPath;$FolderPath"
 
-        # Set the new PATH permanently for the current user
-        [Environment]::SetEnvironmentVariable("Path", $newUserPath, "User")
+    # Set the new PATH permanently for the current user
+    [Environment]::SetEnvironmentVariable("Path", $newUserPath, "User")
 
-        Write-Output "Added '$FolderPath' to user PATH."
-    } else {
-        Write-Output "'$FolderPath' is already in PATH."
-    }
+    Write-Output "Added '$FolderPath' to user PATH."
+    # # Check if the folder is already in PATH
+    # if (-not $currentUserPath.Split(';') -contains $FolderPath) {
+    # } else {
+    #     Write-Output "'$FolderPath' is already in PATH."
+    # }
 }
 
 
