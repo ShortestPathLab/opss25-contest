@@ -92,15 +92,15 @@ Install-IfMissing "docker" {
 # ===============================
 # 3. Check/install Conda
 # ===============================
-if (-not (Get-Command conda -ErrorAction SilentlyContinue)) {
-    Write-Host "❌ Conda not found. Installing Miniconda..."
-    $minicondaInstaller = "$env:TEMP\MinicondaInstaller.exe"
-    Invoke-WebRequest -Uri "https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe" -OutFile $minicondaInstaller
-    Start-Process -FilePath $minicondaInstaller -ArgumentList "/S /D=$HOME\miniconda3" -Wait
-    $env:Path = "$HOME\miniconda3;$HOME\miniconda3\Scripts;$HOME\miniconda3\Library\bin;$env:Path"
-    Write-Host "✅ Miniconda installed."
-} else {
-    Write-Host "✅ Conda already installed."
+Install-IfMissing "conda" {
+    if (Get-Command choco -ErrorAction SilentlyContinue) {
+        choco install miniconda3 -y
+    } elseif (Get-Command winget -ErrorAction SilentlyContinue) {
+        winget install --id Anaconda.Miniconda3 -e --source winget
+    } else {
+        Write-Warning "⚠️ Please install Docker manually."
+        exit 1
+    }
 }
 
 # ===============================
