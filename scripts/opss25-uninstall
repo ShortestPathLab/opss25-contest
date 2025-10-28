@@ -10,8 +10,8 @@ read -r -p "Continue? " response
 if [[ $response =~ ^([Yy]|yes|Yes|YES) ]]
 then
     echo "Proceeding..."
-    rm -rf "$DIR"
     conda env remove -y -n "$ENV_NAME"
+    rm -rf "$DIR"
     echo "✅ opss25 environment uninstalled."
 else
     echo "Aborting"
