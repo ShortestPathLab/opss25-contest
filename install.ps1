@@ -101,6 +101,7 @@ Install-IfMissing "conda" {
         Write-Warning "⚠️ Please install Miniconda manually."
         exit 1
     }
+    $env:Path = "$HOME/miniconda3/bin;$env:Path"
 }
 
 # ===============================
