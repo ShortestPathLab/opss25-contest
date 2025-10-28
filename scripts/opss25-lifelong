@@ -16,7 +16,7 @@ else
 fi
 
 # Run container, mount current dir, and pass through all script args
-docker run $ARGS --rm \
+sudo docker run $ARGS --rm \
   -v "$CURRENT_DIR":/data \
   -w /data \
   $IMAGE_NAME "$@"
