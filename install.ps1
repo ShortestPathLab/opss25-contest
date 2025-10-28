@@ -11,6 +11,30 @@ $pythonVersion = "3.11"
 # Helper functions
 # ===============================
 
+function Add-ToUserPath {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$FolderPath
+    )
+
+    # Get the current user PATH
+    $currentUserPath = [Environment]::GetEnvironmentVariable("Path", "User")
+
+    # Check if the folder is already in PATH
+    if (-not $currentUserPath.Split(';') -contains $FolderPath) {
+        # Append the folder to the PATH
+        $newUserPath = "$currentUserPath;$FolderPath"
+
+        # Set the new PATH permanently for the current user
+        [Environment]::SetEnvironmentVariable("Path", $newUserPath, "User")
+
+        Write-Output "Added '$FolderPath' to user PATH."
+    } else {
+        Write-Output "'$FolderPath' is already in PATH."
+    }
+}
+
+
 function Install-IfMissing {
     param(
         [string]$Command,
@@ -30,7 +54,8 @@ function Ensure-CondaEnv {
         [string]$EnvName,
         [string]$PythonVersion
     )
-
+    
+    conda init powershell
     $envs = & conda env list
     if (-not ($envs -match "^\s*$EnvName\s")) {
         Write-Host "❌ Conda environment '$EnvName' not found. Creating..."
@@ -102,6 +127,7 @@ Install-IfMissing "conda" {
         exit 1
     }
     $env:Path = "$HOME/miniconda3/Scripts;$env:Path"
+    Add-ToUserPath "$HOME/miniconda3/Scripts"
 }
 
 # ===============================
@@ -113,7 +139,6 @@ Ensure-CondaEnv -EnvName $envName -PythonVersion $pythonVersion
 # 5. Activate opss25 environment
 # ===============================
 Write-Host "🔄 Activating conda environment '$envName'..."
-conda init powershell
 conda activate $envName
 
 # ===============================
@@ -137,9 +162,7 @@ $scriptsSubDir = "$scriptsDir\scripts"
 if (-not (Get-Command opss25-uninstall -ErrorAction SilentlyContinue)) {
     Clone-IfMissing -RepoUrl $scriptsRepo -TargetDir $scriptsDir -SetupAction {
         Write-Host "Adding scripts to PATH..."
-        Get-ChildItem "$scriptsSubDir\*" | ForEach-Object { icacls $_.FullName /grant Everyone:F }
-        $profilePath = $PROFILE.CurrentUserAllHosts
-        Add-Content -Path $profilePath -Value "`$env:Path = `"$scriptsSubDir;`$env:Path`""
+        Add-ToUserPath -FolderPath "$scriptsSubDir"
     }
 } else {
     Write-Host "✅ scripts already in PATH."
