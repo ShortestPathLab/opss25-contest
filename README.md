@@ -1,21 +1,25 @@
 # Set up your environment for OPSS25
 
+## Installation
+
 Open up a terminal and run the following command:
 
-## MacOS
+### MacOS
 
 ```bash
-curl -fsSL https://shortestpathlab.github.io/opss25-contest/install | bash
+curl -fsSL https://pathfinding.ai/opss25-setup/install | bash
 ```
 
-## Linux
+### Linux
 
 ```bash
-wget -qO- https://shortestpathlab.github.io/opss25-contest/install | bash
+wget -qO- https://pathfinding.ai/opss25-setup/install | bash
 ```
 
-## Windows
+### Windows
 
 ```ps
 powershell -c "irm https://pathfinding.ai/opss25-setup/install | iex"
 ```
+
+That's it! 🎉
