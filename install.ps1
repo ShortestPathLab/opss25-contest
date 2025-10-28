@@ -44,6 +44,7 @@ function Install-IfMissing {
     if (-not (Get-Command $Command -ErrorAction SilentlyContinue)) {
         Write-Host "[ERROR] $Command not found. Installing..."
         & $InstallAction
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
     } else {
         Write-Host "[SUCCESS] $Command already installed."
     }
@@ -56,6 +57,7 @@ function Ensure-CondaEnv {
     )
     
     conda init powershell
+    conda activate
     $envs = & conda env list
     if (-not ($envs -match "^\s*$EnvName\s")) {
         Write-Host "[ERROR] Conda environment '$EnvName' not found. Creating..."
@@ -94,8 +96,10 @@ function Clone-IfMissing {
 Install-IfMissing "git" {
     if (Get-Command choco -ErrorAction SilentlyContinue) {
         choco install git -y
+        refreshenv
     } elseif (Get-Command winget -ErrorAction SilentlyContinue) {
         winget install --id Git.Git -e --source winget
+
     } else {
         Write-Warning "[WARN] Please install Git manually."
         exit 1
@@ -128,7 +132,6 @@ Install-IfMissing "conda" {
         Write-Warning "[WARN] Please install Miniconda manually."
         exit 1
     }
-    $env:Path = "$HOME/miniconda3/Scripts;$env:Path"
     Add-ToUserPath "$HOME/miniconda3/Scripts"
 }
 
