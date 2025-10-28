@@ -3,4 +3,6 @@ set -e  # exit on error
 
 DIR="$HOME/opss25/packages/PlanViz"
 
-python "$DIR/planviz.py" "$@"
+conda activate opss25
+
+python "$DIR/script/run.py" "$@"
