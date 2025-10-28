@@ -20,6 +20,7 @@ install_if_missing() {
   if ! command -v "$cmd" &>/dev/null; then
     echo "❌ $cmd not found. Installing..."
     eval "$install_cmd"
+    exec bash
   else
     echo "✅ $cmd already installed."
   fi
