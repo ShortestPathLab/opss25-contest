@@ -11,7 +11,7 @@ if [[ $response =~ ^([Yy]|yes|Yes|YES) ]]
 then
     echo "Proceeding..."
     rm -rf "$DIR"
-    conda env remove -n "$ENV_NAME"
+    conda env remove -y -n "$ENV_NAME"
     echo "✅ opss25 environment uninstalled."
 else
     echo "Aborting"
