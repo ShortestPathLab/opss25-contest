@@ -20,7 +20,7 @@ install_if_missing() {
   if ! command -v "$cmd" &>/dev/null; then
     echo "❌ $cmd not found. Installing..."
     eval "$install_cmd"
-    exec bash
+    hash -r
   else
     echo "✅ $cmd already installed."
   fi
@@ -129,6 +129,8 @@ if ! command -v opss25-uninstall &>/dev/null; then
 else
   echo "✅ scripts already in PATH."
 fi
+
+hash -r
 
 # ===============================
 # Done
