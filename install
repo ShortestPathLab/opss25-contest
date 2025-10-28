@@ -8,7 +8,7 @@ ENV_NAME="opss25"
 PACKAGES_DIR="$HOME/$ENV_NAME/packages"
 PIGLET_REPO="https://bitbucket.org/fit5222/piglet-public/src/single-agent-prac/lib_piglet/"
 PLANVIZ_REPO="https://github.com/MAPF-Competition/PlanViz"
-LIFELONG_REPO="<temporary url>"  # replace with actual URL
+SCRIPTS_REPO="https://github.com/ShortestPathLab/opss25-contest-setup"  # replace with actual URL
 PYTHON_VERSION="3.11"
 
 # ===============================
@@ -108,7 +108,7 @@ PIGLET_DIR="$PACKAGES_DIR/piglet"
 if ! command -v piglet &>/dev/null; then
   clone_if_missing "$PIGLET_REPO" "$PIGLET_DIR" "
     echo 'Running Piglet setup...'
-    python setup.py develop
+    python setup.py install
   "
 else
   echo "✅ piglet already in PATH."
@@ -130,11 +130,13 @@ fi
 # ===============================
 # 8. Lifelong scripts setup
 # ===============================
-LIFELONG_DIR="$PACKAGES_DIR/lifelong"
+SCRIPTS_DIR="$PACKAGES_DIR/setup"
+SCRIPTS_SUBDIR="$SCRIPTS_DIR/scripts"
 if ! command -v lifelong &>/dev/null; then
-  clone_if_missing "$LIFELONG_REPO" "$LIFELONG_DIR" "
+  clone_if_missing "$SCRIPTS_REPO" "$SCRIPTS_DIR" "
     echo 'Adding lifelong scripts to PATH...'
-    echo 'export PATH=\"$LIFELONG_DIR:\$PATH\"' >> ~/.bashrc
+    chmod +x $SCRIPTS_SUBDIR/*
+    echo 'export PATH=\"$SCRIPTS_SUBDIR:\$PATH\"' >> ~/.bashrc
   "
 else
   echo "✅ lifelong already in PATH."
