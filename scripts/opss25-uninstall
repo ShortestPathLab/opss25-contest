@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -e  # exit on error
+
+DIR="$HOME/opss25"
+
+ENV_NAME="opss25"
+
+echo "⚠️  WARNING: This will delete the ~/opss25 directory and all its contents, and remove the opss25 environment from conda. Type Y to continue, or Ctrl-C to cancel."
+read -r -p "Continue? " response
+if [[ $response =~ ^([Yy]|yes|Yes|YES) ]]
+then
+    echo "Proceeding..."
+    rm -rf "$DIR"
+    conda env remove -n "$ENV_NAME"
+    echo "✅ opss25 environment uninstalled."
+else
+    echo "Aborting"
+    exit 1
+fi

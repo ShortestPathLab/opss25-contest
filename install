@@ -6,7 +6,6 @@ set -e
 # ===============================
 ENV_NAME="opss25"
 PACKAGES_DIR="$HOME/$ENV_NAME/packages"
-PIGLET_REPO="https://github.com/ShortestPathLab/opss25-piglet"
 PLANVIZ_REPO="https://github.com/MAPF-Competition/PlanViz"
 SCRIPTS_REPO="https://github.com/ShortestPathLab/opss25-contest-setup"  # replace with actual URL
 PYTHON_VERSION="3.11"
@@ -103,20 +102,6 @@ echo "🔄 Activating conda environment '$ENV_NAME'..."
 conda activate "$ENV_NAME"
 
 # ===============================
-# 6. Piglet setup
-# ===============================
-mkdir -p "$PACKAGES_DIR"
-PIGLET_DIR="$PACKAGES_DIR/piglet"
-if ! command -v piglet &>/dev/null; then
-  clone_if_missing "$PIGLET_REPO" "$PIGLET_DIR" "
-    echo 'Running Piglet setup...'
-    python setup.py install
-  "
-else
-  echo "✅ piglet already in PATH."
-fi
-
-# ===============================
 # 7. PlanViz setup
 # ===============================
 PLANVIZ_DIR="$PACKAGES_DIR/PlanViz"
@@ -134,7 +119,7 @@ fi
 # ===============================
 SCRIPTS_DIR="$PACKAGES_DIR/setup"
 SCRIPTS_SUBDIR="$SCRIPTS_DIR/scripts"
-if ! command -v startkit &>/dev/null; then
+if ! command -v opss25-uninstall &>/dev/null; then
   clone_if_missing "$SCRIPTS_REPO" "$SCRIPTS_DIR" "
     echo 'Adding scripts to PATH...'
     chmod +x $SCRIPTS_SUBDIR/*
