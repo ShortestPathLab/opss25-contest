@@ -86,6 +86,8 @@ function Clone-IfMissing {
     Write-Host "✅ Finished setup for $TargetDir."
 }
 
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
 # ===============================
 # 1. Check/install Git
 # ===============================
