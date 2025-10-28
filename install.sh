@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+set -e
+
+# ===============================
+# Configuration
+# ===============================
+ENV_NAME="opss25"
+PACKAGES_DIR="$HOME/$ENV_NAME/packages"
+PIGLET_REPO="https://bitbucket.org/fit5222/piglet-public/src/single-agent-prac/lib_piglet/"
+PLANVIZ_REPO="https://github.com/MAPF-Competition/PlanViz"
+LIFELONG_REPO="<temporary url>"  # replace with actual URL
+PYTHON_VERSION="3.11"
+
+# ===============================
+# Helper functions
+# ===============================
+
+install_if_missing() {
+  local cmd="$1"
+  local install_cmd="$2"
+  if ! command -v "$cmd" &>/dev/null; then
+    echo "❌ $cmd not found. Installing..."
+    eval "$install_cmd"
+  else
+    echo "✅ $cmd already installed."
+  fi
+}
+
+ensure_conda_env() {
+  if ! conda env list | grep -q "^$ENV_NAME "; then
+    echo "❌ Conda environment '$ENV_NAME' not found. Creating..."
+    conda create -y -n "$ENV_NAME" python="$PYTHON_VERSION"
+  else
+    echo "✅ Conda environment '$ENV_NAME' already exists."
+  fi
+}
+
+clone_if_missing() {
+  local repo_url="$1"
+  local target_dir="$2"
+  local setup_cmd="$3"
+
+  if [ ! -d "$target_dir" ]; then
+    echo "❌ $target_dir not found. Cloning from $repo_url..."
+    git clone "$repo_url" "$target_dir"
+    cd "$target_dir"
+    eval "$setup_cmd"
+    cd - >/dev/null
+  else
+    echo "✅ $target_dir already exists, skipping clone."
+  fi
+}
+
+# ===============================
+# 1. Check/install git
+# ===============================
+install_if_missing "git" "sudo apt-get update && sudo apt-get install -y git || brew install git"
+
+# ===============================
+# 2. Check/install docker
+# ===============================
+install_if_missing "docker" "
+  if command -v apt-get &>/dev/null; then
+    sudo apt-get install -y docker.io
+  elif command -v brew &>/dev/null; then
+    brew install --cask docker
+  else
+    echo '⚠️ Please install Docker manually.'
+  fi
+"
+
+# ===============================
+# 3. Check/install conda
+# ===============================
+if ! command -v conda &>/dev/null; then
+  echo "❌ Conda not found. Installing Miniconda..."
+  cd /tmp
+  if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
+    curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o miniconda.sh
+  fi
+  bash miniconda.sh -b -p "$HOME/miniconda"
+  eval "$("$HOME/miniconda/bin/conda" shell.bash hook)"
+  conda init
+  echo "✅ Miniconda installed."
+else
+  echo "✅ Conda already installed."
+  eval "$(conda shell.bash hook)"
+fi
+
+# ===============================
+# 4. Ensure opss25 environment
+# ===============================
+ensure_conda_env
+
+# ===============================
+# 5. Activate opss25 environment
+# ===============================
+echo "🔄 Activating conda environment '$ENV_NAME'..."
+conda activate "$ENV_NAME"
+
+# ===============================
+# 6. Piglet setup
+# ===============================
+mkdir -p "$PACKAGES_DIR"
+PIGLET_DIR="$PACKAGES_DIR/piglet"
+if ! command -v piglet &>/dev/null; then
+  clone_if_missing "$PIGLET_REPO" "$PIGLET_DIR" "
+    echo 'Running Piglet setup...'
+    python setup.py develop
+  "
+else
+  echo "✅ piglet already in PATH."
+fi
+
+# ===============================
+# 7. PlanViz setup
+# ===============================
+PLANVIZ_DIR="$PACKAGES_DIR/PlanViz"
+if ! command -v planviz &>/dev/null; then
+  clone_if_missing "$PLANVIZ_REPO" "$PLANVIZ_DIR" "
+    echo 'Installing PlanViz...'
+    pip install -e .
+  "
+else
+  echo "✅ planviz already in PATH."
+fi
+
+# ===============================
+# 8. Lifelong scripts setup
+# ===============================
+LIFELONG_DIR="$PACKAGES_DIR/lifelong"
+if ! command -v lifelong &>/dev/null; then
+  clone_if_missing "$LIFELONG_REPO" "$LIFELONG_DIR" "
+    echo 'Adding lifelong scripts to PATH...'
+    echo 'export PATH=\"$LIFELONG_DIR:\$PATH\"' >> ~/.bashrc
+  "
+else
+  echo "✅ lifelong already in PATH."
+fi
+
+# ===============================
+# Done
+# ===============================
+echo ""
+echo "🎉 Setup complete!"
+echo "👉 Remember to run: source ~/.bashrc"
+echo "👉 And activate your environment: conda activate $ENV_NAME"
