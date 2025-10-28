@@ -6,7 +6,7 @@ set -e
 # ===============================
 ENV_NAME="opss25"
 PACKAGES_DIR="$HOME/$ENV_NAME/packages"
-PIGLET_REPO="https://bitbucket.org/fit5222/piglet-public/src/single-agent-prac/lib_piglet/"
+PIGLET_REPO="https://github.com/ShortestPathLab/opss25-piglet"
 PLANVIZ_REPO="https://github.com/MAPF-Competition/PlanViz"
 SCRIPTS_REPO="https://github.com/ShortestPathLab/opss25-contest-setup"  # replace with actual URL
 PYTHON_VERSION="3.11"
@@ -43,12 +43,14 @@ clone_if_missing() {
   if [ ! -d "$target_dir" ]; then
     echo "❌ $target_dir not found. Cloning from $repo_url..."
     git clone "$repo_url" "$target_dir"
-    cd "$target_dir"
-    eval "$setup_cmd"
-    cd - >/dev/null
   else
     echo "✅ $target_dir already exists, skipping clone."
   fi
+  echo "🔄 Running setup commands for $target_dir..."
+  cd "$target_dir"
+  eval "$setup_cmd"
+  cd - >/dev/null
+  echo "✅ Finished setup for $target_dir."
 }
 
 # ===============================
@@ -121,7 +123,7 @@ PLANVIZ_DIR="$PACKAGES_DIR/PlanViz"
 if ! command -v planviz &>/dev/null; then
   clone_if_missing "$PLANVIZ_REPO" "$PLANVIZ_DIR" "
     echo 'Installing PlanViz...'
-    pip install -e .
+    pip install -r requirements.txt
   "
 else
   echo "✅ planviz already in PATH."
@@ -132,14 +134,14 @@ fi
 # ===============================
 SCRIPTS_DIR="$PACKAGES_DIR/setup"
 SCRIPTS_SUBDIR="$SCRIPTS_DIR/scripts"
-if ! command -v lifelong &>/dev/null; then
+if ! command -v startkit &>/dev/null; then
   clone_if_missing "$SCRIPTS_REPO" "$SCRIPTS_DIR" "
-    echo 'Adding lifelong scripts to PATH...'
+    echo 'Adding scripts to PATH...'
     chmod +x $SCRIPTS_SUBDIR/*
     echo 'export PATH=\"$SCRIPTS_SUBDIR:\$PATH\"' >> ~/.bashrc
   "
 else
-  echo "✅ lifelong already in PATH."
+  echo "✅ scripts already in PATH."
 fi
 
 # ===============================
