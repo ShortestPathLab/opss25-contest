@@ -98,7 +98,7 @@ Install-IfMissing "conda" {
     } elseif (Get-Command winget -ErrorAction SilentlyContinue) {
         winget install --id Anaconda.Miniconda3 -e --source winget
     } else {
-        Write-Warning "⚠️ Please install Docker manually."
+        Write-Warning "⚠️ Please install Miniconda manually."
         exit 1
     }
 }
