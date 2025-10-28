@@ -113,6 +113,7 @@ Ensure-CondaEnv -EnvName $envName -PythonVersion $pythonVersion
 # 5. Activate opss25 environment
 # ===============================
 Write-Host "🔄 Activating conda environment '$envName'..."
+conda init powershell
 conda activate $envName
 
 # ===============================
