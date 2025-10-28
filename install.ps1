@@ -42,10 +42,10 @@ function Install-IfMissing {
     )
 
     if (-not (Get-Command $Command -ErrorAction SilentlyContinue)) {
-        Write-Host "❌ $Command not found. Installing..."
+        Write-Host "[ERROR] $Command not found. Installing..."
         & $InstallAction
     } else {
-        Write-Host "✅ $Command already installed."
+        Write-Host "[SUCCESS] $Command already installed."
     }
 }
 
@@ -58,10 +58,10 @@ function Ensure-CondaEnv {
     conda init powershell
     $envs = & conda env list
     if (-not ($envs -match "^\s*$EnvName\s")) {
-        Write-Host "❌ Conda environment '$EnvName' not found. Creating..."
+        Write-Host "[ERROR] Conda environment '$EnvName' not found. Creating..."
         conda create -y -n $EnvName python=$PythonVersion
     } else {
-        Write-Host "✅ Conda environment '$EnvName' already exists."
+        Write-Host "[SUCCESS] Conda environment '$EnvName' already exists."
     }
 }
 
@@ -73,17 +73,17 @@ function Clone-IfMissing {
     )
 
     if (-not (Test-Path $TargetDir)) {
-        Write-Host "❌ $TargetDir not found. Cloning from $RepoUrl..."
+        Write-Host "[ERROR] $TargetDir not found. Cloning from $RepoUrl..."
         git clone $RepoUrl $TargetDir
     } else {
-        Write-Host "✅ $TargetDir already exists, skipping clone."
+        Write-Host "[SUCCESS] $TargetDir already exists, skipping clone."
     }
     
-    Write-Host "🔄 Running setup commands for $TargetDir..."
+    Write-Host "[INFO] Running setup commands for $TargetDir..."
     Push-Location $TargetDir
     & $SetupAction
     Pop-Location
-    Write-Host "✅ Finished setup for $TargetDir."
+    Write-Host "[SUCCESS] Finished setup for $TargetDir."
 }
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -97,7 +97,7 @@ Install-IfMissing "git" {
     } elseif (Get-Command winget -ErrorAction SilentlyContinue) {
         winget install --id Git.Git -e --source winget
     } else {
-        Write-Warning "⚠️ Please install Git manually."
+        Write-Warning "[WARN] Please install Git manually."
         exit 1
     }
 }
@@ -111,7 +111,7 @@ Install-IfMissing "docker" {
     } elseif (Get-Command winget -ErrorAction SilentlyContinue) {
         winget install --id Docker.DockerDesktop -e --source winget
     } else {
-        Write-Warning "⚠️ Please install Docker manually."
+        Write-Warning "[WARN] Please install Docker manually."
         exit 1
     }
 }
@@ -125,7 +125,7 @@ Install-IfMissing "conda" {
     } elseif (Get-Command winget -ErrorAction SilentlyContinue) {
         winget install --id Anaconda.Miniconda3 -e --source winget
     } else {
-        Write-Warning "⚠️ Please install Miniconda manually."
+        Write-Warning "[WARN] Please install Miniconda manually."
         exit 1
     }
     $env:Path = "$HOME/miniconda3/Scripts;$env:Path"
@@ -140,7 +140,7 @@ Ensure-CondaEnv -EnvName $envName -PythonVersion $pythonVersion
 # ===============================
 # 5. Activate opss25 environment
 # ===============================
-Write-Host "🔄 Activating conda environment '$envName'..."
+Write-Host "[INFO] Activating conda environment '$envName'..."
 conda activate $envName
 
 # ===============================
@@ -153,7 +153,7 @@ if (-not (Get-Command planviz -ErrorAction SilentlyContinue)) {
         pip install -r requirements.txt
     }
 } else {
-    Write-Host "✅ planviz already in PATH."
+    Write-Host "[SUCCESS] planviz already in PATH."
 }
 
 # ===============================
@@ -167,16 +167,16 @@ if (-not (Get-Command opss25-uninstall -ErrorAction SilentlyContinue)) {
         Add-ToUserPath -FolderPath "$scriptsSubDir"
     }
 } else {
-    Write-Host "✅ scripts already in PATH."
+    Write-Host "[SUCCESS] scripts already in PATH."
 }
 
 # ===============================
 # Done
 # ===============================
 Write-Host ""
-Write-Host "🎉 Setup complete!"
-Write-Host "👉 You may need to restart your PowerShell session."
-Write-Host "👉 And activate your environment: conda activate $envName"
+Write-Host "[INFO] Setup complete!"
+Write-Host "[INFO] You may need to restart your PowerShell session."
+Write-Host "[INFO] And activate your environment: conda activate $envName"
 Write-Host ""
 Write-Host "Available scripts:"
 Write-Host " - opss25-planviz : Launch PlanViz tool"
