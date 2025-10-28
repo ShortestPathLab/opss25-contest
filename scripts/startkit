@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
 set -e  # exit on error
 
-# IMAGE_NAME="ghcr.io/shortestpathlab/opss25-startkit:latest"
-IMAGE_NAME="hello-world"
+IMAGE_NAME="ghcr.io/shortestpathlab/opss25-startkit:latest"
 
 # Get current working directory (where script is run from)
 CURRENT_DIR=$(pwd)
 
-# Run hello-world container, mount current dir, and pass through all script args
-docker run --rm \
+# Check if gpu is available
+if nvidia-smi &> /dev/null; then
+    echo "GPU is available."
+    ARGS="--gpus all"
+else
+    echo "GPU is not available."
+    ARGS=""
+fi
+
+# Run container, mount current dir, and pass through all script args
+docker run $ARGS --rm \
   -v "$CURRENT_DIR":/data \
+  -w /data \
   $IMAGE_NAME "$@"
