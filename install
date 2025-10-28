@@ -126,7 +126,7 @@ conda activate "$ENV_NAME"
 # 7. PlanViz setup
 # ===============================
 PLANVIZ_DIR="$PACKAGES_DIR/PlanViz"
-if ! command -v planviz &>/dev/null; then
+if ! command -v opss25-planviz &>/dev/null; then
   clone_if_missing "$PLANVIZ_REPO" "$PLANVIZ_DIR" "
     echo 'Installing PlanViz...'
     pip install -r requirements.txt
