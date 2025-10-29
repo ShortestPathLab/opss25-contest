@@ -131,7 +131,6 @@ PLANVIZ_DIR="$PACKAGES_DIR/PlanViz"
 if ! command -v opss25-planviz &>/dev/null; then
   clone_if_missing "$PLANVIZ_REPO" "$PLANVIZ_DIR" "
     echo 'Installing PlanViz...'
-    dir
     cd external/PlanViz
     pip install -r requirements.txt
   "
