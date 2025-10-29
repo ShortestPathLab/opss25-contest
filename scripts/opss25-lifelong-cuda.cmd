@@ -13,4 +13,4 @@ SET "CURRENT_DIR=%CD%"
 
 REM Run Docker container, mount current dir, and pass through all script args
 REM %* passes all arguments from the CMD script
-docker run --gpus all --rm -v "%CURRENT_DIR%":/data -w /data %IMAGE_NAME% %*
+docker run --pull always --gpus all --rm -v "%CURRENT_DIR%":/data -w /data %IMAGE_NAME% %*
