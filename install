@@ -76,12 +76,13 @@ install_if_missing "git" "
 # 2. Check/install docker
 # ===============================
 install_if_missing "docker" "
+  echo '⚠️ Will installation will require administrator permissions. You may be prompted for your password.'
   if command -v curl &>/dev/null; then
-    curl -fsSL https://get.docker.com | bash
+    curl -fsSL https://get.docker.com | sudo bash
   elif command -v wget &>/dev/null; then
-    wget -qO- https://get.docker.com | bash
+    wget -qO- https://get.docker.com | sudo bash
   else
-    echo '⚠️ Please install Docker manually.'
+    echo '⚠️ We could automatically install Docker for your system. Please install Docker manually.'
     exit 1
   fi
 "
@@ -129,7 +130,7 @@ PLANVIZ_DIR="$PACKAGES_DIR/PlanViz"
 if ! command -v opss25-planviz &>/dev/null; then
   clone_if_missing "$PLANVIZ_REPO" "$PLANVIZ_DIR" "
     echo 'Installing PlanViz...'
-    mv external/PlanViz .
+    cd external/PlanViz
     pip install -r requirements.txt
   "
 else

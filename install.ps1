@@ -148,7 +148,7 @@ $planvizDir = "$packagesDir\PlanViz"
 if (-not (Get-Command planviz -ErrorAction SilentlyContinue)) {
     Clone-IfMissing -RepoUrl $planvizRepo -TargetDir $planvizDir -SetupAction {
         Write-Host "Installing PlanViz..."
-        Move-Item -Path "external\PlanViz" -Destination "."
+        cd "external\PlanViz"
         pip install -r requirements.txt
     }
 } else {
