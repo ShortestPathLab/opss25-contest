@@ -41,7 +41,7 @@ function Install-IfMissing {
         & $InstallAction
         $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
     } else {
-        Write-Host "[SUCCESS] $Command already installed."
+        Write-Host "[OK] $Command already installed."
     }
 }
 
@@ -58,7 +58,7 @@ function Ensure-CondaEnv {
         Write-Host "[ERROR] Conda environment '$EnvName' not found. Creating..."
         conda create -y -n $EnvName python=$PythonVersion
     } else {
-        Write-Host "[SUCCESS] Conda environment '$EnvName' already exists."
+        Write-Host "[OK] Conda environment '$EnvName' already exists."
     }
 }
 
@@ -73,14 +73,14 @@ function Clone-IfMissing {
         Write-Host "[ERROR] $TargetDir not found. Cloning from $RepoUrl..."
         git clone $RepoUrl $TargetDir
     } else {
-        Write-Host "[SUCCESS] $TargetDir already exists, skipping clone."
+        Write-Host "[OK] $TargetDir already exists, skipping clone."
     }
     
     Write-Host "[INFO] Running setup commands for $TargetDir..."
     Push-Location $TargetDir
     & $SetupAction
     Pop-Location
-    Write-Host "[SUCCESS] Finished setup for $TargetDir."
+    Write-Host "[OK] Finished setup for $TargetDir."
 }
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -152,7 +152,7 @@ if (-not (Get-Command planviz -ErrorAction SilentlyContinue)) {
         pip install -r requirements.txt
     }
 } else {
-    Write-Host "[SUCCESS] planviz already in PATH."
+    Write-Host "[OK] planviz already in PATH."
 }
 
 # ===============================
@@ -166,7 +166,7 @@ if (-not (Get-Command opss25-uninstall -ErrorAction SilentlyContinue)) {
         Add-ToUserPath -FolderPath "$scriptsSubDir"
     }
 } else {
-    Write-Host "[SUCCESS] scripts already in PATH."
+    Write-Host "[OK] scripts already in PATH."
 }
 
 # ===============================
@@ -180,4 +180,5 @@ Write-Host ""
 Write-Host "Available scripts:"
 Write-Host " - opss25-planviz : Launch PlanViz tool"
 Write-Host " - opss25-lifelong : Run lifelong planning with the League of Robot Runners Start Kit"
+Write-Host " - opss25-lifelong-cuda : Run lifelong planning with the League of Robot Runners Start Kit (CUDA enabled)"
 Write-Host " - opss25-uninstall : Uninstall opss25 environment and delete files"
