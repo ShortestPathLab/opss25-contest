@@ -6,7 +6,7 @@ set -e
 # ===============================
 ENV_NAME="opss25"
 PACKAGES_DIR="$HOME/$ENV_NAME/packages"
-PLANVIZ_REPO="https://github.com/MAPF-Competition/PlanViz"
+PLANVIZ_REPO="https://github.com/ShortestPathLab/opss25-startkit"
 SCRIPTS_REPO="https://github.com/ShortestPathLab/opss25-contest-setup"  # replace with actual URL
 PYTHON_VERSION="3.11"
 
@@ -61,6 +61,8 @@ install_if_missing "git" "
     sudo apt-get install -y git
   elif command -v dnf &>/dev/null; then
     sudo dnf install -y git
+  elif command -v yum &>/dev/null; then
+    sudo yum install -y git
   elif command -v pacman &>/dev/null; then
     sudo pacman -S --noconfirm git
   elif command -v brew &>/dev/null; then
@@ -74,12 +76,10 @@ install_if_missing "git" "
 # 2. Check/install docker
 # ===============================
 install_if_missing "docker" "
-  if command -v apt-get &>/dev/null; then
-    sudo apt-get install -y docker.io
-  elif command -v pacman &>/dev/null; then
-    sudo pacman -S --noconfirm docker
-  elif command -v brew &>/dev/null; then
-    brew install --cask docker
+  if command -v curl &>/dev/null; then
+    curl -fsSL https://get.docker.com | bash
+  elif command -v wget &>/dev/null; then
+    wget -qO- https://get.docker.com | bash
   else
     echo '⚠️ Please install Docker manually.'
     exit 1
@@ -129,10 +129,11 @@ PLANVIZ_DIR="$PACKAGES_DIR/PlanViz"
 if ! command -v opss25-planviz &>/dev/null; then
   clone_if_missing "$PLANVIZ_REPO" "$PLANVIZ_DIR" "
     echo 'Installing PlanViz...'
+    mv external/PlanViz .
     pip install -r requirements.txt
   "
 else
-  echo "✅ planviz already in PATH."
+  echo "✅ opss25-planviz already in PATH."
 fi
 
 # ===============================

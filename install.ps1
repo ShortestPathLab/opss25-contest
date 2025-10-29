@@ -3,7 +3,7 @@
 # ===============================
 $envName = "opss25"
 $packagesDir = "$HOME\$envName\packages"
-$planvizRepo = "https://github.com/MAPF-Competition/PlanViz"
+$planvizRepo = "https://github.com/ShortestPathLab/opss25-startkit"
 $scriptsRepo = "https://github.com/ShortestPathLab/opss25-contest-setup"  # replace with actual URL
 $pythonVersion = "3.11"
 
@@ -148,6 +148,7 @@ $planvizDir = "$packagesDir\PlanViz"
 if (-not (Get-Command planviz -ErrorAction SilentlyContinue)) {
     Clone-IfMissing -RepoUrl $planvizRepo -TargetDir $planvizDir -SetupAction {
         Write-Host "Installing PlanViz..."
+        Move-Item -Path "external\PlanViz" -Destination "."
         pip install -r requirements.txt
     }
 } else {
