@@ -7,6 +7,7 @@ REM ===============================
 REM Configuration
 REM ===============================
 SET "DIR=%USERPROFILE%\opss25\packages\PlanViz\external\PlanViz"
+SET "ENV_NAME=opss25"
 
 IF NOT "%CONDA_DEFAULT_ENV%" == "%ENV_NAME%" (
         ECHO You must be in the %ENV_NAME% conda environment. Please activate it first by running 'conda activate %ENV_NAME%'. Aborting.

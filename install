@@ -181,6 +181,7 @@ if ! command -v opss25-uninstall &>/dev/null; then
     echo 'Adding scripts to PATH...'
     chmod +x $SCRIPTS_SUBDIR/*
     echo 'export PATH=\"$SCRIPTS_SUBDIR:\$PATH\"' >> ~/.bashrc
+    hash -r
   "
 else
   echo "✅ scripts already in PATH."
