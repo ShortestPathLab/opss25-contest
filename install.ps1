@@ -182,8 +182,5 @@ Write-Host "[INFO] Setup complete!"
 Write-Host "[INFO] You may need to restart your PowerShell session."
 Write-Host "[INFO] And activate your environment: conda activate $envName"
 Write-Host ""
-Write-Host "Available scripts:"
-Write-Host " - opss25-planviz : Launch PlanViz tool"
-Write-Host " - opss25-lifelong : Run lifelong planning with the League of Robot Runners Start Kit"
-Write-Host " - opss25-lifelong-cuda : Run lifelong planning with the League of Robot Runners Start Kit (CUDA enabled)"
-Write-Host " - opss25-uninstall : Uninstall opss25 environment and delete files"
+
+opss25-help

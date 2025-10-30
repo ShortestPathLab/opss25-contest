@@ -1,0 +1,10 @@
+@echo off
+
+echo Optimisation and Planning Summer School 2025 Toolbox
+
+echo Available scripts:
+echo  - opss25-help: Show this help message
+echo  - opss25-planviz: Launch PlanViz tool
+echo  - opss25-lifelong: Run lifelong planning with the League of Robot Runners Start Kit
+echo  - opss25-lifelong-cuda: Run lifelong planning with the League of Robot Runners Start Kit (CUDA enabled)
+echo  - opss25-uninstall: Uninstall opss25 environment and delete files

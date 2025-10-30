@@ -196,8 +196,6 @@ echo "🎉 Setup complete!"
 echo "👉 You may need to run: source ~/.bashrc"
 echo "👉 And activate your environment: conda activate $ENV_NAME"
 
-echo "Available scripts:"
-echo " - opss25-planviz: Launch PlanViz tool"
-echo " - opss25-lifelong: Run lifelong planning with the League of Robot Runners Start Kit"
-echo " - opss25-lifelong-cuda: Run lifelong planning with the League of Robot Runners Start Kit (CUDA enabled)"
-echo " - opss25-uninstall: Uninstall opss25 environment and delete files"
+echo ""
+
+opss25-help
