@@ -10,8 +10,10 @@ read -r -p "Continue? " response
 if [[ $response =~ ^([Yy]|yes|Yes|YES) ]]
 then
     echo "Proceeding..."
-    # deactivate opss25 environment if active
-    conda deactivate || true
+    if [[ "$CONDA_DEFAULT_ENV" == "$ENV_NAME" ]]; then
+        echo "❌ You are currently in the '$ENV_NAME' conda environment. Please deactivate it first by running 'conda deactivate'. Aborting."
+        exit 1
+    fi
     conda env remove -y -n "$ENV_NAME"
     rm -rf "$DIR"
     echo "✅ opss25 environment uninstalled."

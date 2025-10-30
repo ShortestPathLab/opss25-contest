@@ -14,7 +14,10 @@ SET /P response=Continue?
 
 IF /I "%response%"=="Y" (
     ECHO Proceeding...
-    conda deactivate || REM Ignore error if not active
+    IF ($Env:CONDA_DEFAULT_ENV -eq $ENV_NAME) {
+        Write-Host " You are currently in the '$ENV_NAME' conda environment. Please deactivate it first by running 'conda deactivate'. Aborting."
+        EXIT 1
+    }
     conda env remove -y -n "%ENV_NAME%"
     rmdir /S /Q "%DIR%"
     ECHO ✅ opss25 environment uninstalled.
