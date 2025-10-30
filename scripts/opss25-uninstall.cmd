@@ -14,7 +14,7 @@ SET /P response=Continue?
 
 IF /I "%response%"=="Y" (
     ECHO Proceeding...
-    conda deactivate
+    conda deactivate || REM Ignore error if not active
     conda env remove -y -n "%ENV_NAME%"
     rmdir /S /Q "%DIR%"
     ECHO ✅ opss25 environment uninstalled.

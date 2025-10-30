@@ -85,6 +85,11 @@ function Clone-IfMissing {
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
+if (Get-Command opss25-uninstall -ErrorAction SilentlyContinue) {
+    Write-Host "[INFO] opss25 environment already set up. If you want to reinstall, first run: opss25-uninstall. Exiting."
+    exit 0
+}
+
 # ===============================
 # 1. Check/install Git
 # ===============================

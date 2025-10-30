@@ -54,6 +54,15 @@ clone_if_missing() {
 }
 
 # ===============================
+# 0. Check if installed
+# ===============================
+
+if command -v opss25-uninstall &>/dev/null; then
+  echo "✅ opss25 environment already set up. If you want to reinstall, first run: opss25-uninstall. Exiting."
+  exit 0
+fi
+
+# ===============================
 # 1. Check/install git
 # ===============================
 install_if_missing "git" "
