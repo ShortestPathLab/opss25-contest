@@ -7,7 +7,7 @@ IMAGE_NAME="ghcr.io/shortestpathlab/opss25-startkit-cuda:latest"
 CURRENT_DIR=$(pwd)
 
 # Run container, mount current dir, and pass through all script args
-sudo docker run --pull always --gpus all --rm \
+docker run --pull always --gpus all --rm \
   -v "$CURRENT_DIR":/data \
   -w /data \
   $IMAGE_NAME "$@"

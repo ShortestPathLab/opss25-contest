@@ -7,7 +7,7 @@ IMAGE_NAME="ghcr.io/shortestpathlab/opss25-startkit:latest"
 CURRENT_DIR=$(pwd)
 
 # Run container, mount current dir, and pass through all script args
-sudo docker run --pull always --rm \
+docker run --pull always --rm \
   -v "$CURRENT_DIR":/data \
   -w /data \
   $IMAGE_NAME "$@"

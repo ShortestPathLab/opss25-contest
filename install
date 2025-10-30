@@ -80,8 +80,15 @@ install_if_missing "docker" "
   echo '⚠️ Installation will require administrator permissions. You may be prompted for your password.'
   if command -v curl &>/dev/null; then
     curl -fsSL https://get.docker.com | sudo bash
+    if command -v dockerd-rootless-setuptool.sh &>/dev/null; then
+      dockerd-rootless-setuptool.sh install
+    fi
+    /
   elif command -v wget &>/dev/null; then
     wget -qO- https://get.docker.com | sudo bash
+    if command -v dockerd-rootless-setuptool.sh &>/dev/null; then
+      dockerd-rootless-setuptool.sh install
+    fi
   else
     echo '⚠️ We could automatically install Docker for your system. Please install Docker manually.'
     exit 1
