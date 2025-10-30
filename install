@@ -82,6 +82,27 @@ install_if_missing "git" "
     exit 1
   fi
 "
+
+setup_rootless_docker() {
+  # Only for Linux systems
+  if command -v dockerd-rootless-setuptool.sh &>/dev/null; then
+    if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update -y
+        sudo apt-get install -y uidmap
+    elif command -v dnf >/dev/null 2>&1; then
+        sudo dnf install -y shadow-utils
+    elif command -v yum >/dev/null 2>&1; then
+        sudo yum install -y shadow-utils
+    elif command -v pacman >/dev/null 2>&1; then
+        sudo pacman -Sy --noconfirm shadow
+    fi
+    dockerd-rootless-setuptool.sh install
+  else
+    echo "⚠️ Rootless Docker setup tool not found. Please you may need to set up rootless Docker manually, or run commands with sudo."
+    exit 1
+  fi
+}
+
 # ===============================
 # 2. Check/install docker
 # ===============================
@@ -89,15 +110,11 @@ install_if_missing "docker" "
   echo '⚠️ Installation will require administrator permissions. You may be prompted for your password.'
   if command -v curl &>/dev/null; then
     curl -fsSL https://get.docker.com | sudo bash
-    if command -v dockerd-rootless-setuptool.sh &>/dev/null; then
-      dockerd-rootless-setuptool.sh install
-    fi
-    /
+    setup_rootless_docker
+    
   elif command -v wget &>/dev/null; then
     wget -qO- https://get.docker.com | sudo bash
-    if command -v dockerd-rootless-setuptool.sh &>/dev/null; then
-      dockerd-rootless-setuptool.sh install
-    fi
+    setup_rootless_docker
   else
     echo '⚠️ We could automatically install Docker for your system. Please install Docker manually.'
     exit 1
