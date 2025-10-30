@@ -5,7 +5,7 @@ DIR="$HOME/opss25/packages/PlanViz/external/PlanViz"
 ENV_NAME="opss25"
 
 if [[ "$CONDA_DEFAULT_ENV" != "$ENV_NAME" ]]; then
-        echo "❌ You must be in the $ENV_NAME conda environment. Please activate it first by running 'conda deactivate $ENV_NAME'. Aborting."
+        echo "❌ You must be in the $ENV_NAME conda environment. Please activate it first by running 'conda activate $ENV_NAME'. Aborting."
         exit 1
 fi
 
