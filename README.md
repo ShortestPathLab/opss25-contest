@@ -19,7 +19,7 @@ wget -qO- https://pathfinding.ai/opss25-setup/install | bash
 ### Windows
 
 ```ps
-powershell -c "irm https://pathfinding.ai/opss25-setup/install | iex"
+powershell -c "irm https://pathfinding.ai/opss25-setup/install.ps1 | iex"
 ```
 
 That's it! 🎉
