@@ -63,6 +63,17 @@ if command -v opss25-uninstall &>/dev/null; then
 fi
 
 # ===============================
+# 0.5. Check if MacOS and ensure brew is installed
+# ===============================
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  install_if_missing "brew" "
+    echo '⚠️ Installation will require administrator permissions. You may be prompted for your password.'
+    curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
+  "
+fi
+
+# ===============================
 # 1. Check/install git
 # ===============================
 install_if_missing "git" "
@@ -108,10 +119,17 @@ setup_rootless_docker() {
 # ===============================
 install_if_missing "docker" "
   echo '⚠️ Installation will require administrator permissions. You may be prompted for your password.'
-  if command -v curl &>/dev/null; then
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Special case for macOS
+    # Install a more well supported version of Docker
+    brew tap-new $USER/local-docker
+    brew tap homebrew/core --force
+    brew extract --version=28.4.0 docker $USER/local-docker
+    brew install docker@28.4.0
+    ln -s /usr/local/Cellar/docker@28.4.0/28.4.0/bin/docker@28.4.0 /usr/local/bin/docker
+  elif command -v curl &>/dev/null; then
     curl -fsSL https://get.docker.com | sudo bash
     setup_rootless_docker
-    
   elif command -v wget &>/dev/null; then
     wget -qO- https://get.docker.com | sudo bash
     setup_rootless_docker
