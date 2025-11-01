@@ -126,7 +126,7 @@ install_if_missing "docker" "
     brew tap homebrew/core --force
     brew extract --version=28.4.0 docker $USER/local-docker
     brew install docker@28.4.0
-    ln -s /usr/local/Cellar/docker@28.4.0/28.4.0/bin/docker@28.4.0 /usr/local/bin/docker
+    sudo ln -s /usr/local/Cellar/docker@28.4.0/28.4.0/bin/docker@28.4.0 /usr/local/bin/docker
   elif command -v curl &>/dev/null; then
     curl -fsSL https://get.docker.com | sudo bash
     setup_rootless_docker
